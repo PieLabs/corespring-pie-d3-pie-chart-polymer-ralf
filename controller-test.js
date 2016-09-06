@@ -1,4 +1,4 @@
-require('should');
+var should = require('should');
 var processing = require('./controller');
 
 console.debug = function() {}
@@ -6,6 +6,47 @@ console.debug = function() {}
 describe('processing', function() {
 
   describe('model', function() {
+
+    describe('correctResponse', function() {
+
+      function assertCorrectResponse(mode, answer, assertion) {
+        var model = processing.model({
+          correctResponse: ['correct'],
+          feedback: {}
+        }, {
+          value: [answer]
+        }, {
+          locale: 'en_US',
+          mode: mode
+        });
+        assertion(model.config.correctResponse);
+      }
+
+      describe('in mode gather', function() {
+        describe('when answer is correct', function() {
+          assertCorrectResponse('gather', 'correct', should.not.exist)
+        });
+        describe('when answer is incorrect', function() {
+          assertCorrectResponse('gather', 'incorrect', should.not.exist)
+        });
+      });
+      describe('in mode view', function() {
+        describe('when answer is correct', function() {
+          assertCorrectResponse('view', 'correct', should.not.exist)
+        });
+        describe('when answer is incorrect', function() {
+          assertCorrectResponse('view', 'incorrect', should.not.exist)
+        });
+      });
+      describe('in mode evaluate', function() {
+        describe('when answer is correct', function() {
+          assertCorrectResponse('evaluate', 'correct', should.not.exist)
+        });
+        describe('when answer is incorrect', function() {
+          assertCorrectResponse('evaluate', 'incorrect', should.exist)
+        });
+      });
+    });
 
     describe('disabled', function() {
       it("is disabled, when mode is evaluate", function() {
