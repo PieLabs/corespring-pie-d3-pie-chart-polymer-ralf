@@ -1,0 +1,9 @@
+**/.bower.installed.json
+*.iml
+.eslintrc.*
+.idea
+.vscode
+bower_components
+docs/demo/bower.json
+node_modules
+serve-pie-demo/bower.json

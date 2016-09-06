@@ -1,0 +1,79 @@
+{
+  "id": "config",
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "config",
+  "description": "The configuration model for this pie.",
+  "type": "object",
+  "required": [
+    "id",
+    "component",
+    "correctResponse",
+    "model"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "the uid of the item",
+      "example": "1"
+    },
+    "component": {
+      "type": "object",
+      "description": "The unique identifier for the component",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "correctResponse": {
+      "type": "array",
+      "description": "An array of correct responses",
+      "items": {
+        "type": "number"
+      }
+    },
+    "translations": {
+      "type": "object",
+      "description": "An optional map of translations. These can be referred to in model by prefixing the key with a '$' symbol.",
+      "properties": {
+        "default_locale": {
+          "type": "string",
+          "description": "what locale to fall back to"
+        }
+      }
+    },
+    "model": {
+      "type": "object",
+      "description": "The base model that is sent to the client",
+      "properties": {
+        "sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "color": {
+                "type": "string",
+                "description": "The color to show"
+              },
+              "label": {
+                "type": "string",
+                "description": "The label to show"
+              },
+              "value": {
+                "type": "number",
+                "description": "the value of the choice - used for correctResponse"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

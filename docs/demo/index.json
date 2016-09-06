@@ -1,0 +1,52 @@
+{
+  "components"  : [
+    {
+      "id" : "one",
+      "component" : {
+        "name" : "corespring-pie-d3-pie-chart-polymer-ralf",
+        "version" : "1.0.0"
+      },
+      "correctResponse" : [3, 3, 3, 3],
+      "feedback" : {
+        "apple" : "$FB_APPLE",
+        "banana" : "$FB_BANANA",
+        "carrot" : "$FB_CARROT",
+        "donut" : "$FB_DONUT"
+      },
+      "translations" : {
+        "default_locale" : "en_US",
+        "en_US" : {
+          "PROMPT" : "Make it all three",
+          "LABEL_APPLE" : "Apple",
+          "LABEL_BANANA" : "Banana",
+          "LABEL_CARROT" : "Carrot",
+          "LABEL_DONUT" : "Donut",
+          "FB_APPLE" : "3 expected",
+          "FB_BANANA" : "3 expected",
+          "FB_CARROT" : "3 expected",
+          "FB_DONUT" : "3 expected"
+        },
+        "es_ES" : {
+          "PROMPT" : "Elija las 2 cosas más sabrosas",
+          "LABEL_APPLE" : "manzana",
+          "LABEL_BANANA" : "plátano",
+          "LABEL_CARROT" : "zanahoria",
+          "LABEL_DONUT" : "buñuelo",
+          "FB_APPLE" : "3 esperado",
+          "FB_BANANA" : "3 esperado",
+          "FB_CARROT" : "3 esperado",
+          "FB_DONUT" : "3 esperado"
+        }
+      },
+      "model" : {
+        "prompt" : "$PROMPT",
+        "sections" : [
+          { "label" : "$LABEL_APPLE", "value" : 1, "color": "red"},
+          { "label" : "$LABEL_BANANA", "value" : 2, "color": "green"},
+          { "label" : "$LABEL_CARROT", "value" : 3, "color": "blue"},
+          { "label" : "$LABEL_DONUT", "value" : 4, "color": "yellow"}
+        ]
+      }
+    }
+  ]
+}
