@@ -35,7 +35,7 @@
         <p><label for="input">{{item.label}}: </label> ${{item.value}}</p>
         <paper-slider
             min="0" max="10" value="{{item.value}}"
-            on-change="drawChart">
+            on-change="refreshChart">
         </paper-slider>
       </template>
     </div>
@@ -101,19 +101,24 @@
       var arcs = me.svg.selectAll(".arc")
           .data(me.pie(me.data))
 
-      arcs.exit().remove();
+      arcs.select('g path').style("fill", function(d) {
+        return (d.data.color);
+      });
 
-      var g = arcs.enter().append("g")
+      arcs.select('g text').attr("fill", function(d) {
+        return (d.data.textColor);
+      });
+
+      me.g = arcs.enter().append("g")
           .attr("class", "arc")
-          .merge(arcs)
 
-      g.append("path")
+      me.g.append("path")
           .attr("d", me.arc)
           .style("fill", function(d) {
             return (d.data.color);
           });
 
-      g.append("text")
+      me.g.append("text")
           .attr("transform", function(d) {
             return "translate(" + me.arc.centroid(d) + ")";
           })
@@ -121,23 +126,25 @@
           .style("text-anchor", "middle")
           .text(function(d) {
             return d.data.label;
-          }).attr('fill', function(d) {
-        return d.data.textColor;
-      });
-
-      var values = _.map(me.data, 'value');
-      me.session.value = values;
+          })
+          .attr('fill', function(d) {
+            return d.data.textColor;
+          });
     },
     refreshChart: function (e) {
       var me = this;
 
       console.log("refreshChart", me.data);
 
-      me.g.data(me.pie(me.data))
-          .select("path").attr("d", me.arc);
+      me.svg.selectAll(".arc path").data(me.pie(me.data))
+          .attr("d", me.arc);
 
-      me.g.select("text")
+      me.svg.selectAll(".arc text").data(me.pie(me.data))
           .attr("transform", function(d) { return "translate(" + me.arc.centroid(d) + ")"; });
+
+      var values = _.map(me.data, 'value');
+      me.session.value = values;
+
     }
   });
 </script>
