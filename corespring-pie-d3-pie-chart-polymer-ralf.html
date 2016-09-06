@@ -1,10 +1,12 @@
-<link rel="import" href="../polymer/polymer.html">
-<link rel="import" href="../paper-slider.html">
+<link rel="import"
+    href="../polymer/polymer.html">
+<link rel="import"
+    href="../paper-slider.html">
+
 <script src="../d3/d3.min.js"></script>
+
 <!--
-
   A pie for d3 pie chart interaction.
-
   @demo demo/index.html
 -->
 <dom-module id="corespring-pie-d3-pie-chart-polymer-ralf">
@@ -14,13 +16,16 @@
         display: block;
         height: 400px;
       }
+
       text {
         fill: white;
       }
+
       .controls {
         display: inline-block;
         margin: 0 0 0 20px;
       }
+
       svg {
         float: right;
         margin: 0 20px 0 0;
@@ -28,10 +33,13 @@
     </style>
     <p>{{state.config.prompt}}</p>
     <div class="controls">
-      <template is="dom-repeat" items="{{data}}">
+      <template is="dom-repeat"
+          items="{{data}}">
         <p><label for="input">{{item.label}}: </label> ${{item.value}}</p>
         <paper-slider disabled="{{state.config.disabled}}"
-            min="0" max="10" value="{{item.value}}"
+            min="0"
+            max="10"
+            value="{{item.value}}"
             on-change="refreshChart">
         </paper-slider>
       </template>
@@ -39,113 +47,4 @@
     <svg id="svg"></svg>
   </template>
 </dom-module>
-<script>
-  Polymer({
-    is: 'corespring-pie-d3-pie-chart-polymer-ralf',
-    properties: {
-      state: {type: Object, observer: '_onStateChanged'},
-      session: {type: Object, observer: '_onSessionChanged'}
-    },
-    _onSessionChanged: function(){
-      var me = this;
-      console.log('_onSessionChanged', me.session, me.state);
-      me.session.value = me.session.value || [];
-      me.notifyPath('session.value', me.session.value);
-    },
-    _onStateChanged: function(){
-      var me = this;
-
-      console.log('_onStateChanged', me.state);
-      me.data = me.state.config.sections;
-      me.data.forEach(function(d) {
-        d.value = +d.value;
-      });
-
-      me.drawChart();
-
-      //setting the session directly doesn't work
-      setTimeout(function(){me.updateSession()}, 100);
-    },
-    attached: function(){
-      this.createElements();
-    },
-    createElements: function () {
-      var width = 500,
-          height = 500,
-          radius = Math.min(width, height) / 2;
-
-      this.arc = d3.arc()
-          .outerRadius(radius - 10)
-          .innerRadius(0);
-
-      this.pie = d3.pie()
-          .sort(null)
-          .value(function(d) { return d.value; });
-
-      this.svg = d3.select(this.$.svg)
-          .attr("width", width)
-          .attr("height", height)
-          .append("g")
-          .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
-    },
-    drawChart: function () {
-      var me = this;
-
-      var arcs = me.svg.selectAll(".arc")
-          .data(me.pie(me.data))
-
-      //update the fill of existing paths
-      arcs.select('path').style("fill", function(d) {
-        return (d.data.color);
-      });
-
-      //update the color of existing text
-      arcs.select('text').attr("fill", function(d) {
-        return (d.data.textColor);
-      });
-
-      me.g = arcs.enter().append("g")
-          .attr("class", "arc")
-
-      me.g.append("path")
-          .attr("d", me.arc)
-          .style("fill", function(d) {
-            return (d.data.color);
-          })
-          .style("stroke", 'white')
-          .style("stroke-width", '2px')
-
-      me.g.append("text")
-          .attr("transform", function(d) {
-            return "translate(" + me.arc.centroid(d) + ")";
-          })
-          .attr("dy", ".35em")
-          .style("text-anchor", "middle")
-          .text(function(d) {
-            return d.data.label;
-          })
-          .attr('fill', function(d) {
-            return d.data.textColor;
-          });
-    },
-    refreshChart: function (e) {
-      var me = this;
-
-      console.log("refreshChart", me.data);
-
-      me.svg.selectAll(".arc path").data(me.pie(me.data))
-          .attr("d", me.arc);
-
-      me.svg.selectAll(".arc text").data(me.pie(me.data))
-          .attr("transform", function(d) { return "translate(" + me.arc.centroid(d) + ")"; });
-
-      me.updateSession();
-    },
-    updateSession: function(){
-      var me = this;
-
-      var values = _.map(me.data, 'value');
-      me.session.value = values;
-    }
-  });
-</script>
+<script src="corespring-pie-d3-pie-chart-polymer-ralf.js"></script>
