@@ -9,7 +9,7 @@ describe('processing', function() {
 
     describe('correctResponse', function() {
 
-      function assertCorrectResponse(mode, answer, assertion) {
+      function getModel(mode, answer) {
         var model = processing.model({
           correctResponse: ['correct'],
           feedback: {}
@@ -19,31 +19,31 @@ describe('processing', function() {
           locale: 'en_US',
           mode: mode
         });
-        assertion(model.config.correctResponse);
+        return model;
       }
 
       describe('in mode gather', function() {
         describe('when answer is correct', function() {
-          assertCorrectResponse('gather', 'correct', should.not.exist)
+          should.not.exist(getModel('gather', 'correct').config.correctResponse)
         });
         describe('when answer is incorrect', function() {
-          assertCorrectResponse('gather', 'incorrect', should.not.exist)
+          should.not.exist(getModel('gather', 'incorrect').config.correctResponse)
         });
       });
       describe('in mode view', function() {
         describe('when answer is correct', function() {
-          assertCorrectResponse('view', 'correct', should.not.exist)
+          should.not.exist(getModel('view', 'correct').config.correctResponse)
         });
         describe('when answer is incorrect', function() {
-          assertCorrectResponse('view', 'incorrect', should.not.exist)
+          should.not.exist(getModel('view', 'incorrect').config.correctResponse)
         });
       });
       describe('in mode evaluate', function() {
         describe('when answer is correct', function() {
-          assertCorrectResponse('evaluate', 'correct', should.not.exist)
+          should.not.exist(getModel('evaluate', 'correct').config.correctResponse)
         });
         describe('when answer is incorrect', function() {
-          assertCorrectResponse('evaluate', 'incorrect', should.exist)
+          should.exist(getModel('evaluate', 'incorrect').config.correctResponse)
         });
       });
     });
