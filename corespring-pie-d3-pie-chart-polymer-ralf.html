@@ -25,9 +25,6 @@
         float: right;
         margin: 0 20px 0 0;
       }
-      .arc path {
-        stroke: #fff;
-      }
     </style>
     <p>{{state.config.prompt}}</p>
     <div class="controls">
@@ -118,7 +115,9 @@
           .attr("d", me.arc)
           .style("fill", function(d) {
             return (d.data.color);
-          });
+          })
+          .style("stroke", 'white')
+          .style("stroke-width", '2px')
 
       me.g.append("text")
           .attr("transform", function(d) {
@@ -146,7 +145,6 @@
 
       var values = _.map(me.data, 'value');
       me.session.value = values;
-
     }
   });
 </script>
