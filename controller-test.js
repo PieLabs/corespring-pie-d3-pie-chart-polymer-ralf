@@ -1,61 +1,103 @@
 require('should');
 var processing = require('./controller');
 
-console.debug = function(){}
+console.debug = function() {}
 
-describe('processing', function () {
+describe('processing', function() {
 
-  describe('model', function () {
+  describe('model', function() {
 
-    describe('locale', function () {
+    describe('disabled', function() {
+      it("is disabled, when mode is evaluate", function() {
+        model = processing.model({}, {}, {
+          locale: 'en_US',
+          mode: 'evaluate'
+        });
+        model.config.disabled.should.eql(true);
+      });
+      it("is disabled, when mode is view", function() {
+        model = processing.model({}, {}, {
+          locale: 'en_US',
+          mode: 'view'
+        });
+        model.config.disabled.should.eql(true);
+      });
+      it("is not disabled, when mode is gather", function() {
+        model = processing.model({}, {}, {
+          locale: 'en_US',
+          mode: 'gather'
+        });
+        model.config.disabled.should.eql(false);
+      });
+    });
+
+    describe('locale', function() {
 
       var question = {
         translations: {
           en_US: {
             PROMPT: 'en_US Prompt',
             LABEL: 'en_US Label',
-            FB_ONE: 'en_US feedback one'
+            FB_ONE: 'en_US feedback one',
+            FB_TWO: 'en_US feedback two',
+            FB_THREE: 'en_US feedback three',
           }
         },
-        correctResponse: ['two'],
+        correctResponse: [3, 3, 3],
         feedback: {
-          one: '$FB_ONE'
+          "1": '$FB_ONE',
+          "2": '$FB_TWO',
+          "3": '$FB_THREE',
         },
         model: {
           prompt: '$PROMPT',
-          choices: [
-            { label: '$LABEL', value: 'one' },
-            { label: 'no lookup', value: 'two' },
-            { label: '$NOT_FOUND_LABEL', value: 'three'}
+          sections: [
+            {
+              label: '$LABEL',
+              value: 1
+            },
+            {
+              label: 'no lookup',
+              value: 2
+            },
+            {
+              label: '$NOT_FOUND_LABEL',
+              value: 3
+            }
           ]
 
         }
       }
 
-      var session = { value: ['one']};
+      var session = {
+        value: [1, 2, 3]
+      };
       var model;
 
-      beforeEach(function () {
-        model = processing.model(question, session, { locale: 'en_US', mode: 'evaluate' });
-      });
-      
-      it('looks up the locale for the prompt', function () {
-        model.config.prompt.should.eql('en_US Prompt');
-      });
-      
-      it('looks up the locale for a choice', function(){
-        model.config.choices[0].label.should.eql('en_US Label');
-      });
-      
-      it('skips the lookup if the choice does not start with a $', function(){
-        model.config.choices[1].label.should.eql('no lookup');
-      });
-      
-      it('returns the value if it starts with a $ but no translation is found', function(){
-        model.config.choices[2].label.should.eql('$NOT_FOUND_LABEL');
+      beforeEach(function() {
+        model = processing.model(question, session, {
+          locale: 'en_US',
+          mode: 'evaluate'
+        });
       });
 
-      it('sets the feedback', function(){
+      it('looks up the locale for the prompt', function() {
+        model.config.prompt.should.eql('en_US Prompt');
+      });
+
+      it('looks up the locale for a choice', function() {
+        model.config.sections[0].label.should.eql('en_US Label');
+      });
+
+      it('skips the lookup if the choice does not start with a $', function() {
+        model.config.sections[1].label.should.eql('no lookup');
+      });
+
+      it('returns the value if it starts with a $ but no translation is found', function() {
+        model.config.sections[2].label.should.eql('$NOT_FOUND_LABEL');
+      });
+
+      it('sets the feedback', function() {
         model.outcomes[0].feedback.should.eql('en_US feedback one');
       });
     });

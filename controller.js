@@ -16,13 +16,13 @@ exports.model = function(question, session, env) {
     config: initConfig(question)
   };
 
-  if(session && _.isArray(session.value) && session.value.length > 0){
+  if (session && _.isArray(session.value) && session.value.length > 0) {
     applyAnswersToSections(base.config.sections, session.value);
   }
 
   if (env.mode === 'evaluate') {
 
-    var allCorrect = _.isEqual(session.value.sort(), question.correctResponse.sort());
+    var allCorrect = _.isEqual(session.value, question.correctResponse);
     console.log('session.value: allCorrect', allCorrect, session.value, typeof(session.value), 'question.correctResponse: ', question.correctResponse, typeof(question.correctResponse));
 
     if (!allCorrect) {
@@ -38,8 +38,8 @@ exports.model = function(question, session, env) {
   //--------------------------------------------
 
   function createOutcomes(allCorrect) {
-    return _.map(session.value, function(v) {
-      var correct = _.includes(question.correctResponse, v);
+    return _.map(session.value, function(v, index) {
+      var correct = question.correctResponse[index] === v;
       var feedback = allCorrect ? null : lookup(question.feedback[v]);
       return {
         value: v,
@@ -79,14 +79,14 @@ exports.model = function(question, session, env) {
     return cfg;
   }
 
-  function applyAnswersToSections(sections, answers){
-    _.forEach(sections, function(s, index){
-      s.value = answers[index].value;
+  function applyAnswersToSections(sections, answers) {
+    _.forEach(sections, function(s, index) {
+      s.value = answers[index];
     });
   }
 
-  function applyOutcomesToSections(sections, outcomes){
-    _.forEach(sections, function(s, index){
+  function applyOutcomesToSections(sections, outcomes) {
+    _.forEach(sections, function(s, index) {
       s.color = 'grey';
       s.textColor = outcomes[index].correct ? 'green' : 'orange';
     });
