@@ -33,7 +33,7 @@
     <div class="controls">
       <template is="dom-repeat" items="{{data}}">
         <p><label for="input">{{item.label}}: </label> ${{item.value}}</p>
-        <paper-slider
+        <paper-slider disabled="{{state.config.disabled}}"
             min="0" max="10" value="{{item.value}}"
             on-change="refreshChart">
         </paper-slider>
@@ -101,11 +101,13 @@
       var arcs = me.svg.selectAll(".arc")
           .data(me.pie(me.data))
 
-      arcs.select('g path').style("fill", function(d) {
+      //update the fill of existing paths
+      arcs.select('path').style("fill", function(d) {
         return (d.data.color);
       });
 
-      arcs.select('g text').attr("fill", function(d) {
+      //update the color of existing text
+      arcs.select('text').attr("fill", function(d) {
         return (d.data.textColor);
       });
 
