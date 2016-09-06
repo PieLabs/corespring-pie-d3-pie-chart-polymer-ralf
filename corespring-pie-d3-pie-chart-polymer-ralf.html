@@ -46,23 +46,25 @@
       state: {type: Object, observer: '_onStateChanged'},
       session: {type: Object, observer: '_onSessionChanged'}
     },
-    observers: [
-      '_onClassNameChanged(state.className)'
-    ],
-    _onClassNameChanged: function(className){
-      if(className){
-        this.setAttribute('class', className);
-        this.updateStyles();
-      }
-    },
     _onSessionChanged: function(){
-      this.session.value = this.session.value || [];
-      this.notifyPath('session.value', this.session.value);
+      var me = this;
+      console.log('_onSessionChanged', me.session, me.state);
+      me.session.value = me.session.value || [];
+      me.notifyPath('session.value', me.session.value);
     },
     _onStateChanged: function(){
-      console.log('_onStateChanged', this.state)
-      this.data = this.state.config.sections;
-      this.drawChart();
+      var me = this;
+
+      console.log('_onStateChanged', me.state);
+      me.data = me.state.config.sections;
+      me.data.forEach(function(d) {
+        d.value = +d.value;
+      });
+
+      me.drawChart();
+
+      //setting the session directly doesn't work
+      setTimeout(function(){me.updateSession()}, 100);
     },
     attached: function(){
       this.createElements();
@@ -88,12 +90,6 @@
     },
     drawChart: function () {
       var me = this;
-
-      me.data = me.state.config.sections;
-
-      me.data.forEach(function(d) {
-        d.value = +d.value;
-      });
 
       var arcs = me.svg.selectAll(".arc")
           .data(me.pie(me.data))
@@ -142,6 +138,11 @@
 
       me.svg.selectAll(".arc text").data(me.pie(me.data))
           .attr("transform", function(d) { return "translate(" + me.arc.centroid(d) + ")"; });
+
+      me.updateSession();
+    },
+    updateSession: function(){
+      var me = this;
 
       var values = _.map(me.data, 'value');
       me.session.value = values;
