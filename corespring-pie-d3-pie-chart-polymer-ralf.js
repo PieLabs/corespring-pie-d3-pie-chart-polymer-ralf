@@ -59,6 +59,8 @@
   function updatePieChart() {
     var me = this;
 
+    console.log('updatePieChart', arguments);
+
     me.chart.refreshChart();
     me.updateSession();
   }
@@ -89,12 +91,13 @@
     var me = this;
 
     me.createElements = createElements;
+    me.cssClass = cssClass;
     me.cssNamespace = cssNamespace;
     me.drawChart = drawChart;
     me.refreshChart = refreshChart;
     me.setData = setData;
-    me.cssClass = cssClass;
-
+    me.updatePaths = updatePaths;
+    me.updateTexts = updateTexts;
     //------------------------------
     //
     //------------------------------
@@ -129,14 +132,18 @@
     }
 
     function updatePaths(paths) {
+      var me = this;
+
       return paths
+        .transition().ease(d3.easeLinear).attr('d', me.arc)
         .style("fill", function(d) {
           return (d.data.color);
-        })
-        .transition().attr('d', me.arc);
+        });
     }
 
     function updateTexts(texts) {
+      var me = this;
+
       return texts
         .text(function(d) {
           return d.data.label;
@@ -166,8 +173,8 @@
         .attr("dy", ".35em")
         .style("text-anchor", "middle");
 
-      updateTexts(arcs.select('text'));
-      updatePaths(arcs.select('path'));
+      me.updateTexts(arcs.select('text'));
+      me.updatePaths(arcs.select('path'));
     }
 
     function refreshChart(e) {
@@ -178,8 +185,8 @@
       var arcs = me.svg.selectAll(".arc")
         .data(me.pie(me.data))
 
-      updateTexts(arcs.select('text'));
-      updatePaths(arcs.select('path'));
+      me.updateTexts(arcs.select('text'));
+      me.updatePaths(arcs.select('path'));
     }
 
     function cssClass() {

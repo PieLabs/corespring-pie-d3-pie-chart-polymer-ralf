@@ -47,21 +47,23 @@
     </style>
 
     <template is="dom-if"
-        if="{{model.config.correctResponse}}">
+        if="[[model.config.correctResponse]]">
       <corespring-show-correct-answer-toggle
           on-toggle="onToggleCorrectAnswer"
       ></corespring-show-correct-answer-toggle>
     </template>
-    <p>{{model.config.prompt}}</p>
+    <p>[[model.config.prompt]]</p>
     <div class="controls">
       <template is="dom-repeat"
-          items="{{data}}">
-        <p><label for="input">{{item.label}}: </label> ${{item.value}}</p>
-        <paper-slider disabled="{{model.config.disabled}}"
+          items="[[data]]">
+        <p><label for="input">[[item.label]]: </label> $[[item.value]]</p>
+        <paper-slider disabled="[[model.config.disabled]]"
             min="0"
             max="10"
+            continuous="true"
             value="{{item.value}}"
-            on-change="updatePieChart">
+            immediate-value="{{item.value}}"
+            on-immediate-value-changed="updatePieChart">
         </paper-slider>
       </template>
     </div>
