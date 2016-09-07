@@ -52,7 +52,7 @@
     this.chart.createElements(this.$.svg);
   }
 
-  function updatePieChart(){
+  function updatePieChart() {
     var me = this;
 
     me.chart.refreshChart();
@@ -84,17 +84,18 @@
   function PieChart(cssNamespace) {
     var me = this;
 
-    me.cssNamespace = cssNamespace;
-    me.setData = setData;
     me.createElements = createElements;
+    me.cssNamespace = cssNamespace;
     me.drawChart = drawChart;
     me.refreshChart = refreshChart;
+    me.setData = setData;
+    me.cssClass = cssClass;
 
     //------------------------------
     //
     //------------------------------
 
-    function setData(data){
+    function setData(data) {
       me.data = data;
       me.data.forEach(function(d) {
         d.value = +d.value;
@@ -112,7 +113,7 @@
 
       this.pie = d3.pie()
         .sort(null)
-        .value(function (d) {
+        .value(function(d) {
           return d.value;
         });
 
@@ -123,45 +124,46 @@
         .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
     }
 
+    function updatePaths(paths) {
+      return paths
+        .style("fill", function(d) {
+          return (d.data.color);
+        })
+        .attr('d', me.arc);
+    }
+
+    function updateTexts(texts) {
+      return texts
+        .attr("class", function(d) {
+          return me.cssClass(d.data.textClass);
+        })
+        .attr("transform", function(d) {
+          return "translate(" + me.arc.centroid(d) + ")";
+        });
+    }
+
     function drawChart() {
       var me = this;
 
       var arcs = me.svg.selectAll(".arc")
         .data(me.pie(me.data))
 
-      //update the existing paths
-      arcs.select('path').style("fill", function (d) {
-        return (d.data.color);
-      }).attr('d', me.arc);
-
-      //update the existing text
-      arcs.select('text').attr("class", function (d) {
-        return [d.data.textClass, me.cssNamespace].join(' ');
-      });
-
       me.g = arcs.enter().append("g")
-        .attr("class", "arc")
+        .attr("class", me.cssClass("arc"))
 
       me.g.append("path")
-        .attr("d", me.arc)
-        .style("fill", function (d) {
-          return (d.data.color);
-        })
         .style("stroke", 'white')
         .style("stroke-width", '2px')
 
       me.g.append("text")
-        .attr("transform", function (d) {
-          return "translate(" + me.arc.centroid(d) + ")";
-        })
         .attr("dy", ".35em")
         .style("text-anchor", "middle")
-        .text(function (d) {
+        .text(function(d) {
           return d.data.label;
-        })
-        .attr("class", function (d) {
-          return [d.data.textClass, me.cssNamespace].join(' ');
         });
+
+      updateTexts(arcs.select('text'));
+      updatePaths(arcs.select('path'));
     }
 
     function refreshChart(e) {
@@ -169,13 +171,19 @@
 
       console.log("refreshChart", me.data);
 
-      me.svg.selectAll(".arc path").data(me.pie(me.data))
-        .attr("d", me.arc);
+      var arcs = me.svg.selectAll(".arc")
+        .data(me.pie(me.data))
 
-      me.svg.selectAll(".arc text").data(me.pie(me.data))
-        .attr("transform", function (d) {
-          return "translate(" + me.arc.centroid(d) + ")";
-        });
+      updateTexts(arcs.select('text'));
+      updatePaths(arcs.select('path'));
+    }
+
+    function cssClass() {
+      var arr = Array.prototype.slice.call(arguments);
+      arr.push(this.cssNamespace);
+      return arr.join(' ');
     }
   }
+
+
 })();
