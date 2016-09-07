@@ -1,6 +1,7 @@
 {
   "dependencies" : {
-    "corespring-pie-d3-pie-chart-polymer-ralf" : "../.."
+    "corespring-pie-d3-pie-chart-polymer-ralf" : "../..",
+    "corespring-show-correct-answer-toggle": "git@github.com:PieLabs/corespring-show-correct-answer-toggle.git"
   },
   "resolutions" : {
     "polymer" : "^1.6.0",

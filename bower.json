@@ -11,6 +11,7 @@
     "Ralf Bokelberg"
   ],
   "dependencies": {
+    "corespring-show-correct-answer-toggle": "git@github.com:PieLabs/corespring-show-correct-answer-toggle.git",
     "d3" : "^4.2.2",
     "lodash": "^4.7.0",
     "paper-slider": "^1.0.0",

@@ -2,6 +2,8 @@
     href="../polymer/polymer.html">
 <link rel="import"
     href="../paper-slider.html">
+<link rel="import"
+    href="../corespring-show-correct-answer-toggle/corespring-show-correct-answer-toggle.html"/>
 
 <script src="../d3/d3.min.js"></script>
 
@@ -30,7 +32,18 @@
         float: right;
         margin: 0 20px 0 0;
       }
+
+      corespring-show-correct-answer-toggle {
+        margin: 0 auto 0 auto;
+      }
     </style>
+
+    <template is="dom-if"
+        if="{{state.config.correctResponse}}">
+      <corespring-show-correct-answer-toggle
+          on-toggle="onToggleCorrectAnswer"
+      ></corespring-show-correct-answer-toggle>
+    </template>
     <p>{{state.config.prompt}}</p>
     <div class="controls">
       <template is="dom-repeat"
@@ -40,7 +53,7 @@
             min="0"
             max="10"
             value="{{item.value}}"
-            on-change="refreshChart">
+            on-change="updatePieChart">
         </paper-slider>
       </template>
     </div>

@@ -26,7 +26,7 @@ exports.model = function(question, session, env) {
     console.log('session.value: allCorrect', allCorrect, session.value, typeof(session.value), 'question.correctResponse: ', question.correctResponse, typeof(question.correctResponse));
 
     if (!allCorrect) {
-      base.config.correctResponse = question.correctResponse;
+      base.config.correctResponse = makeCorrectResponse(base.config.sections, question.correctResponse);
     }
     base.outcomes = createOutcomes(allCorrect);
     applyOutcomesToSections(base.config.sections, base.outcomes);
@@ -72,9 +72,12 @@ exports.model = function(question, session, env) {
     cfg.disabled = env.mode && env.mode !== 'gather';
     cfg.prompt = lookup(cfg.prompt);
     cfg.sections = _.map(cfg.sections, function(c) {
-      c.label = lookup(c.label);
-      c.textColor = 'black';
-      return c;
+      return {
+        color: c.color,
+        label: lookup(c.label),
+        textColor:  'black',
+        value: c.value
+      };
     });
     return cfg;
   }
@@ -89,6 +92,17 @@ exports.model = function(question, session, env) {
     _.forEach(sections, function(s, index) {
       s.color = 'grey';
       s.textColor = outcomes[index].correct ? 'green' : 'orange';
+    });
+  }
+
+  function makeCorrectResponse(sections, response) {
+    return _.map(sections, function(s, index){
+      return {
+        label: s.label,
+        value: response[index],
+        textColor: 'green',
+        color: 'grey'
+      }
     });
   }
 
