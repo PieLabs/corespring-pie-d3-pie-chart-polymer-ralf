@@ -138,6 +138,9 @@
 
     function updateTexts(texts) {
       return texts
+        .text(function(d) {
+          return d.data.label;
+        })
         .attr("class", function(d) {
           return me.cssClass(d.data.textClass);
         })
@@ -161,10 +164,7 @@
 
       me.g.append("text")
         .attr("dy", ".35em")
-        .style("text-anchor", "middle")
-        .text(function(d) {
-          return d.data.label;
-        });
+        .style("text-anchor", "middle");
 
       updateTexts(arcs.select('text'));
       updatePaths(arcs.select('path'));
