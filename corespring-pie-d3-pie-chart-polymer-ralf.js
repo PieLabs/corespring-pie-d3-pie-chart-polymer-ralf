@@ -133,7 +133,7 @@
         .style("fill", function(d) {
           return (d.data.color);
         })
-        .attr('d', me.arc);
+        .transition().attr('d', me.arc);
     }
 
     function updateTexts(texts) {
@@ -144,7 +144,7 @@
         .attr("class", function(d) {
           return me.cssClass(d.data.textClass);
         })
-        .attr("transform", function(d) {
+        .transition().attr("transform", function(d) {
           return "translate(" + me.arc.centroid(d) + ")";
         });
     }
