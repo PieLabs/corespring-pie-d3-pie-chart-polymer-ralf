@@ -47,17 +47,17 @@
     </style>
 
     <template is="dom-if"
-        if="{{state.config.correctResponse}}">
+        if="{{model.config.correctResponse}}">
       <corespring-show-correct-answer-toggle
           on-toggle="onToggleCorrectAnswer"
       ></corespring-show-correct-answer-toggle>
     </template>
-    <p>{{state.config.prompt}}</p>
+    <p>{{model.config.prompt}}</p>
     <div class="controls">
       <template is="dom-repeat"
           items="{{data}}">
         <p><label for="input">{{item.label}}: </label> ${{item.value}}</p>
-        <paper-slider disabled="{{state.config.disabled}}"
+        <paper-slider disabled="{{model.config.disabled}}"
             min="0"
             max="10"
             value="{{item.value}}"

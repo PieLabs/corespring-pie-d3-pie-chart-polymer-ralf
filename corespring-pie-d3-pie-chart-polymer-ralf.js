@@ -3,17 +3,17 @@
   return Polymer({
     is: 'corespring-pie-d3-pie-chart-polymer-ralf',
     properties: {
-      state: {
+      model: {
         type: Object,
-        observer: '_onStateChanged'
+        observer: '_onModelChanged'
       },
       session: {
         type: Object,
         observer: '_onSessionChanged'
       }
     },
+    _onModelChanged: _onModelChanged,
     _onSessionChanged: _onSessionChanged,
-    _onStateChanged: _onStateChanged,
     attached: attached,
     onToggleCorrectAnswer: onToggleCorrectAnswer,
     updatePieChart: updatePieChart,
@@ -24,18 +24,22 @@
   //
   //--------------------------------------------------
 
+  function _onModelChanged(newValue, oldValue) {
+    console.log('_onModelChanged', arguments, this.model);
+  }
+
   function _onSessionChanged() {
     var me = this;
-    console.log('_onSessionChanged', me.session, me.state);
+    console.log('_onSessionChanged', me.session, me.model);
     me.session.value = me.session.value || [];
     me.notifyPath('session.value', me.session.value);
   }
 
-  function _onStateChanged() {
+  function _onModelChanged(newValue, oldValue) {
     var me = this;
-    console.log('_onStateChanged', me.state);
 
-    me.data = me.state.config.sections;
+    console.log('_onModelChanged', newValue);
+    me.data = newValue.config.sections;
     me.chart.setData(me.data);
     me.chart.drawChart();
 
@@ -70,11 +74,11 @@
     var me = this;
 
     if (show) {
-      me.data = me.state.config.correctResponse;
-      me.chart.setData(me.state.config.correctResponse)
+      me.data = me.model.config.correctResponse;
+      me.chart.setData(me.model.config.correctResponse)
     } else {
-      me.data = me.state.config.sections;
-      me.chart.setData(me.state.config.sections)
+      me.data = me.model.config.sections;
+      me.chart.setData(me.model.config.sections)
     }
     me.chart.drawChart();
   }
