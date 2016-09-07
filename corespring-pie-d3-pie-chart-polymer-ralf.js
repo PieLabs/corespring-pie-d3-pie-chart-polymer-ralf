@@ -48,7 +48,7 @@
 
 
   function attached() {
-    this.chart = new PieChart();
+    this.chart = new PieChart('corespring-pie-d3-pie-chart-polymer-ralf');
     this.chart.createElements(this.$.svg);
   }
 
@@ -81,9 +81,10 @@
 
   //----------------------------
 
-  function PieChart() {
+  function PieChart(cssNamespace) {
     var me = this;
 
+    me.cssNamespace = cssNamespace;
     me.setData = setData;
     me.createElements = createElements;
     me.drawChart = drawChart;
@@ -134,8 +135,8 @@
       }).attr('d', me.arc);
 
       //update the existing text
-      arcs.select('text').attr("fill", function (d) {
-        return (d.data.textColor);
+      arcs.select('text').attr("class", function (d) {
+        return [d.data.textClass, me.cssNamespace].join(' ');
       });
 
       me.g = arcs.enter().append("g")
@@ -158,8 +159,8 @@
         .text(function (d) {
           return d.data.label;
         })
-        .attr('fill', function (d) {
-          return d.data.textColor;
+        .attr("class", function (d) {
+          return [d.data.textClass, me.cssNamespace].join(' ');
         });
     }
 

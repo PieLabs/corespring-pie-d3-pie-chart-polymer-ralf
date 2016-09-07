@@ -75,7 +75,7 @@ exports.model = function(question, session, env) {
       return {
         color: c.color,
         label: lookup(c.label),
-        textColor:  'black',
+        textClass:  '',
         value: c.value
       };
     });
@@ -91,7 +91,7 @@ exports.model = function(question, session, env) {
   function applyOutcomesToSections(sections, outcomes) {
     _.forEach(sections, function(s, index) {
       s.color = 'grey';
-      s.textColor = outcomes[index].correct ? 'green' : 'orange';
+      s.textClass = outcomes[index].correct ? 'correct' : 'incorrect';
     });
   }
 
@@ -100,7 +100,7 @@ exports.model = function(question, session, env) {
       return {
         label: s.label,
         value: response[index],
-        textColor: 'green',
+        textClass: 'correct',
         color: 'grey'
       }
     });
