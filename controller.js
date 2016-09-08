@@ -18,6 +18,8 @@ exports.model = function(question, session, env) {
 
   if (session && _.isArray(session.value) && session.value.length > 0) {
     applyAnswersToSections(base.config.sections, session.value);
+  } else {
+    session.value = getDefaultAnswer(base.config);
   }
 
   if (env.mode === 'evaluate') {
@@ -36,6 +38,10 @@ exports.model = function(question, session, env) {
   return base;
 
   //--------------------------------------------
+
+  function getDefaultAnswer(config){
+    return _.map(config.sections, 'value')
+  }
 
   function createOutcomes(allCorrect) {
     return _.map(session.value, function(v, index) {

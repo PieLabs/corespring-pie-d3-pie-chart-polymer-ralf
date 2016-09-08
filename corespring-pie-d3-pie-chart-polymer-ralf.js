@@ -24,10 +24,6 @@
   //
   //--------------------------------------------------
 
-  function _onModelChanged(newValue, oldValue) {
-    console.log('_onModelChanged', arguments, this.model);
-  }
-
   function _onSessionChanged() {
     var me = this;
     console.log('_onSessionChanged', me.session, me.model);
@@ -42,12 +38,6 @@
     me.data = newValue.config.sections;
     me.chart.setData(me.data);
     me.chart.drawChart();
-
-    //how to init the session with something based on the state?
-    //setting the session directly doesn't work
-    setTimeout(function() {
-      me.updateSession()
-    }, 100);
   }
 
 
