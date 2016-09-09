@@ -29,6 +29,7 @@
     console.log('_onSessionChanged', me.session, me.model);
     me.session.value = me.session.value || [];
     me.notifyPath('session.value', me.session.value);
+    me.initialised = true;
   }
 
   function _onModelChanged(newValue, oldValue) {
@@ -36,12 +37,15 @@
 
     console.log('_onModelChanged', newValue);
     me.data = newValue.config.sections;
-    me.chart.setData(me.data);
-    me.chart.drawChart();
+
+    if(me.initialised) {
+      me.chart.setData(me.data);
+      me.chart.drawChart();
+    }
   }
 
-
   function attached() {
+    console.log('attached');
     this.chart = new PieChart('corespring-pie-d3-pie-chart-polymer-ralf');
     this.chart.createElements(this.$.svg);
   }
@@ -49,10 +53,11 @@
   function updatePieChart() {
     var me = this;
 
-    console.log('updatePieChart', arguments);
-
-    me.chart.refreshChart();
-    me.updateSession();
+    if(me.initialised) {
+      console.log('updatePieChart', arguments);
+      me.chart.refreshChart();
+      me.updateSession();
+    }
   }
 
   function updateSession() {
@@ -149,17 +154,19 @@
     function drawChart() {
       var me = this;
 
+      console.log('drawChart', me.data)
+
       var arcs = me.svg.selectAll(".arc")
         .data(me.pie(me.data))
 
       me.g = arcs.enter().append("g")
         .attr("class", me.cssClass("arc"))
 
-      me.g.append("path")
+      me.updatePaths(me.g.append("path"))
         .style("stroke", 'white')
         .style("stroke-width", '2px')
 
-      me.g.append("text")
+      me.updateTexts(me.g.append("text"))
         .attr("dy", ".35em")
         .style("text-anchor", "middle");
 
