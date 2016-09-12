@@ -63,8 +63,13 @@
   function updateSession() {
     var me = this;
 
-    var values = _.map(me.data, 'value');
-    me.session.value = values;
+    if(me.model.config.disabled) {
+      console.log('updateSession: not updating bc. pie is disabled');
+    } else {
+      var values = _.map(me.data, 'value');
+      console.log('updateSession: updating to:', values);
+      me.session.value = values;
+    }
   }
 
   function onToggleCorrectAnswer(event, show) {
@@ -72,10 +77,10 @@
 
     if (show) {
       me.data = me.model.config.correctResponse;
-      me.chart.setData(me.model.config.correctResponse)
+      me.chart.setData(me.model.config.correctResponse);
     } else {
       me.data = me.model.config.sections;
-      me.chart.setData(me.model.config.sections)
+      me.chart.setData(me.model.config.sections);
     }
     me.chart.drawChart();
   }
